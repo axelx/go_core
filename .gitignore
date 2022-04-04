@@ -13,8 +13,11 @@
 
 
 .idea
-hw_01/.idea
+hw_0*/.idea
+hw_0*/go.sum
+hw_0*/README.md
 
 README-local.md
 some_test
 go_tour
+go-core-3
