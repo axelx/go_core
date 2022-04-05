@@ -14,13 +14,12 @@ func main() {
 
 	u := []string{"https://go.dev/", "https://golang.org/", "https://rubyonrails.org"}
 
-	i, ds := index.Index(u)
+	in, docs := index.Index(u)
 
-	for i, v := range i {
-		c := strings.Contains(i, *sFlag)
-		if c && *sFlag != "" {
+	for i, v := range in {
+		if strings.Contains(i, *sFlag) {
 			for i := 0; i < len(v); i++ {
-				fmt.Println("Вхождения найдены в документах: ", binarySearch(v[i], ds))
+				fmt.Println("Вхождения найдены в документах: ", binarySearch(v[i], docs))
 			}
 		}
 	}
