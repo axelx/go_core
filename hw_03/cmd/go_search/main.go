@@ -3,20 +3,28 @@ package main
 import (
 	"flag"
 	"fmt"
-	"go_hw_02/pkg/crawler"
-	"go_hw_02/pkg/index"
+	"go_hw_03/pkg/crawler"
+	"go_hw_03/pkg/crawler/spider"
+	"go_hw_03/pkg/index"
+	"sort"
 	"strings"
 )
 
 func main() {
-	sFlag := flag.String("s", "", "help message for flag s")
+	sFlag := flag.String("s", "", "Введите слова для поиска по флагу -s")
+
 	flag.Parse()
 
-	u := []string{"https://go.dev/", "https://golang.org/", "https://rubyonrails.org"}
+	urls := []string{"https://go.dev/", "https://golang.org/", "https://rubyonrails.org"}
 
-	in, docs := index.Index(u)
+	docs := parseDocs(urls)
 
-	for i, v := range in {
+	indx := index.Index(docs)
+
+	sort.Sort(byID(docs))
+
+	// поиск по флагу s
+	for i, v := range indx {
 		if strings.Contains(i, *sFlag) {
 			for i := 0; i < len(v); i++ {
 				fmt.Println("Вхождения найдены в документах: ", binarySearch(v[i], docs))
@@ -26,8 +34,30 @@ func main() {
 
 }
 
-func binarySearch(needle int, haystack []crawler.Document) crawler.Document {
+// Для сортировки документов
+type byID []crawler.Document
 
+func (a byID) Len() int           { return len(a) }
+func (a byID) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a byID) Less(i, j int) bool { return a[i].ID < a[j].ID }
+
+func parseDocs(urls []string) []crawler.Document {
+	var docs = []crawler.Document{}
+
+	s := spider.New()
+
+	for _, v := range urls {
+		doc, err := s.Scan(v, 1)
+		if err != nil {
+			continue
+		}
+		docs = append(docs, doc...)
+	}
+
+	return docs
+}
+
+func binarySearch(needle int, haystack []crawler.Document) crawler.Document {
 	low := 0
 	high := len(haystack) - 1
 

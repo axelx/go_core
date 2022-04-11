@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"go_hw_02/pkg/crawler"
+	"go_hw_03/pkg/crawler"
 )
 
 // Service - служба поискового робота.

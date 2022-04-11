@@ -1,4 +1,4 @@
-module go_hw_02
+module go_hw_03
 
 go 1.16
 
